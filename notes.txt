@@ -1,0 +1,23 @@
+*   there are total 5 pages in this project including the home page. Now for starters, first we need to link all the view pages with the link.
+    that can be done by adding "requestMapping" annotation.
+    
+*	To link a single view page with multiple urls, pass an array of the context path in params:
+	Eg.: @RequestMapping({"/", "/home"})   
+	
+*	now once the user submits the job details in "addjob" page, he gets directed to the success page displaying the entries. So, we need to have
+	POJO class in the model folder containing all the variables in the "addjob" page. 
+	SO we are using "lombok" dependency as it :
+	Lombok dependency is used to reduce boilerplate code in Java by providing annotations that automatically generate common code like getters, 
+	setters, constructors, and more at compile time.
+	
+	Mention "@Data" annotation to make lombok understand which class is POJO class.
+	Further can add "@AllArgsConstructor" to add the constructor as well.
+	
+	Eg: 
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Component
+	public class JobPost { .... }
+
+	

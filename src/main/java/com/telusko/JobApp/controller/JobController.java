@@ -16,13 +16,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class JobController {
 
-    @RequestMapping({ "/", "home" })
+    @GetMapping({ "/", "home" })
     public String home() {
+    	System.out.println("Inside home");
         return "home";
     }
 
-    @RequestMapping("addjob")
+    @GetMapping("addjob")
     public String addJob() {
+    	System.out.println("Inside addJob");
         return "addjob";
     }
-}
+
+    @PostMapping("handleForm")
+    public String handleForm(JobPost jobPost) {
+//        service.addJob(jobPost);
+        return "success";
+    }  
+}    

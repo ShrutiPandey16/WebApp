@@ -1,0 +1,145 @@
+*	DispatcherServlet Features:
+	It is like the brain of Spring MVC.
+	It handles all HTTP requests and dispatches them to the right parts.
+	You usually don’t configure it manually in Spring Boot.
+	It works closely with controllers, view resolvers, and models to build the response.
+	
+*	Here's what happens behind the scenes:
+	1. Browser hits the Spring Boot app
+		The request is caught by DispatcherServlet because it's mapped to /.		
+	2. DispatcherServlet looks for a matching handler
+		It checks the list of controllers (@Controller) and their URL mappings (@RequestMapping("/about")).
+	3. It calls the appropriate method
+		For example: aboutPage() in MainController.
+	4. The controller returns a view name
+		Like: "about"
+	5. DispatcherServlet talks to ViewResolver
+		Uses prefix/suffix to resolve to a full JSP: /WEB-INF/views/about.jsp
+	6. DispatcherServlet forwards the request to JSP
+		JSP is rendered and converted to HTML.
+	7. HTML is sent back to the browser
+	
+	
+*	Coming to the workflow:	
+	### ✅ **Correct Spring Boot Workflow for JSP Rendering**
+	
+	Let’s assume this setup:
+	
+	- You have a URL like `http://localhost:8080/about`
+	- You have this controller:
+	  ```java
+	  @Controller
+	  public class MainController {
+	      @RequestMapping("/about")
+	      public String aboutPage() {
+	          return "about";
+	      }
+	  }
+	  ```
+	
+	Now the full step-by-step workflow:
+	
+	---
+	
+	#### **1. Request Hits DispatcherServlet**
+	- Spring Boot auto-configures a `DispatcherServlet`.
+	- It intercepts **all incoming HTTP requests**.
+	
+	---
+	
+	#### **2. DispatcherServlet Matches URL to Controller**
+	- It checks all controllers (`@Controller` or `@RequestMapping`) to match the URL `/about`.
+	- It finds `aboutPage()` in `MainController`.
+	
+	---
+	
+	#### **3. Controller Method is Called**
+	- `aboutPage()` is triggered and it returns `"about"` as the view name.
+	
+	---
+	
+	#### **4. View Resolver is Activated**
+	- Spring uses **ViewResolver** (internally configured by Spring Boot) to convert `"about"` into a full path.
+	- It uses:
+	  ```properties
+	  spring.mvc.view.prefix=/WEB-INF/views/
+	  spring.mvc.view.suffix=.jsp
+	  ```
+	- So `"about"` becomes:  
+	  `/WEB-INF/views/about.jsp`
+	
+	---
+	
+	#### **5. JSP Page is Rendered**
+	- Spring forwards the request to that JSP file.
+	- JSP gets processed and converted to HTML.
+	- The final HTML response goes back to the browser.
+	
+	---
+	
+	### ✅ Now, to your bracket questions:
+	
+	#### (1) **Is it necessary to name it `application.properties`?**
+	- 🔸 By default, **yes** — Spring Boot automatically looks for a file named `application.properties` (or `application.yml`) in the `src/main/resources` folder.
+	- 🔸 ✅ But you **can** use a custom name! You just have to **specify it** using this JVM flag or in `@SpringBootApplication`:
+	  ```bash
+	  --spring.config.name=myconfig
+	  ```
+	  Or in code:
+	  ```java
+	  @SpringBootApplication
+	  @PropertySource("classpath:myconfig.properties")
+	  ```
+	
+	---
+	
+	#### (2) **Is it mandatory to have only one properties file?**
+	- 🔸 No, you can have **multiple properties files**!
+	- You can **split them logically** (e.g., `db.properties`, `mail.properties`) and import them using:
+	  ```java
+	  @PropertySource("classpath:db.properties")
+	  @PropertySource("classpath:mail.properties")
+	  ```
+	- You can also define **profile-specific files** like:
+	  ```
+	  application-dev.properties
+	  application-prod.properties
+	  ```
+	  and activate one using:
+	  ```properties
+	  spring.profiles.active=dev
+	  ```
+	
+	---
+	
+	#### (3) **Is the hierarchy pre-decided? Is this how Spring is created?**
+	- ✅ Yes, Spring Boot has a **default property resolution hierarchy** — it looks for values in a certain **priority order**:
+	  1. `application.properties` in `src/main/resources`
+	  2. Command-line arguments
+	  3. Environment variables
+	  4. `.yml` or other loaded config files
+	  5. Defaults inside Spring Boot libraries
+	
+	This flexible config system is **part of Spring Boot’s opinionated setup** — it's made this way to reduce boilerplate and enforce convention over configuration.
+	
+	---
+	
+	### 🔁 Summary of Key Concepts
+	
+	| Concept                       | Default             | Can Customize? |
+	|------------------------------|---------------------|----------------|
+	| `application.properties`     | Yes                 | ✅ Yes          |
+	| One config file only         | No                  | ✅ No           |
+	| Controller → View resolution | Via prefix/suffix   | ✅ Yes          |
+	| Workflow is flexible         | Convention-based    | ✅ Yes          |
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
