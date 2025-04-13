@@ -1,0 +1,2 @@
+*   there are total 5 pages in this project including the home page. Now for starters, first we need to link all the view pages with the link.
+    that can be done by adding "requestMapping" annotation.
